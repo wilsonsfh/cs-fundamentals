@@ -1,9 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import type { PatternMeta, FlashcardEntry } from '@/types/content'
+import type { TraceData } from '@/types/trace'
 
 const PATTERNS_DIR = path.join(process.cwd(), 'src/content/patterns')
 const PROBLEMS_DIR = path.join(process.cwd(), 'src/content/problems')
+const TRACES_DIR = path.join(process.cwd(), 'src/content/traces')
 
 // Pattern metadata — defines order, descriptions, icons
 const PATTERN_META: Record<string, Omit<PatternMeta, 'slug' | 'problemCount'>> = {
@@ -266,4 +268,29 @@ export function getAllProblemSlugs(): string[] {
   return fs.readdirSync(PROBLEMS_DIR)
     .filter(f => f.endsWith('.md'))
     .map(f => f.replace('.md', ''))
+}
+
+// ─── Trace helpers ────────────────────────────────────────────────────────────
+
+export function getAllTraceSlugs(): string[] {
+  if (!fs.existsSync(TRACES_DIR)) return []
+  return fs.readdirSync(TRACES_DIR)
+    .filter(f => f.endsWith('.json'))
+    .map(f => f.replace('.json', ''))
+}
+
+export function getTraceData(slug: string): TraceData | null {
+  const filePath = path.join(TRACES_DIR, `${slug}.json`)
+  try {
+    const raw = fs.readFileSync(filePath, 'utf-8')
+    return JSON.parse(raw) as TraceData
+  } catch {
+    return null
+  }
+}
+
+export function getAllTraces(): TraceData[] {
+  return getAllTraceSlugs()
+    .map(slug => getTraceData(slug))
+    .filter(Boolean) as TraceData[]
 }

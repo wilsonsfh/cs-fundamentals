@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getAllPatternSlugs, getPatternMeta, getPatternContent, parsePatternSections, getProblemsForPattern } from '@/lib/content'
+import { getAllPatternSlugs, getPatternMeta, getPatternContent, parsePatternSections, getProblemsForPattern, getAllTraces } from '@/lib/content'
 import { PatternDetail } from '@/components/patterns/PatternDetail'
 
 export function generateStaticParams() {
@@ -19,12 +19,17 @@ export default async function PatternPage({ params }: PatternPageProps) {
 
   const sections = parsePatternSections(content)
   const problems = getProblemsForPattern(slug)
+  const allTraces = getAllTraces()
+  const relatedTraces = allTraces
+    .filter(t => t.patternSlug === slug)
+    .map(({ slug, title, steps }) => ({ slug, title, steps }))
 
   return (
     <PatternDetail
       meta={meta}
       sections={sections}
       problems={problems}
+      traces={relatedTraces}
     />
   )
 }

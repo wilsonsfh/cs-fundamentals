@@ -1,0 +1,198 @@
+{
+  "slug": "two-sum",
+  "title": "Two Sum",
+  "description": "Find two indices whose values sum to a target using a hash map for O(1) complement lookup.",
+  "patternSlug": "hash-map-set",
+  "language": "python",
+  "code": "def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in seen:\n            return [seen[complement], i]\n        seen[num] = i\n    return []",
+  "input": "nums = [2, 7, 11, 15], target = 9",
+  "output": "[0, 1]",
+  "steps": [
+    {
+      "stepNumber": 1,
+      "lineNumber": 1,
+      "description": "Enter two_sum(nums=[2, 7, 11, 15], target=9)",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": true },
+        "target": { "value": "9", "changed": true }
+      },
+      "dataStructure": {
+        "type": "array",
+        "state": [2, 7, 11, 15],
+        "highlights": [],
+        "pointers": {}
+      }
+    },
+    {
+      "stepNumber": 2,
+      "lineNumber": 2,
+      "description": "Initialize empty hash map `seen = {}`",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{}", "changed": true }
+      },
+      "dataStructure": {
+        "type": "hash-map",
+        "state": {},
+        "highlights": [],
+        "pointers": {}
+      }
+    },
+    {
+      "stepNumber": 3,
+      "lineNumber": 3,
+      "description": "Loop iteration i=0, num=2",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{}", "changed": false },
+        "i": { "value": "0", "changed": true },
+        "num": { "value": "2", "changed": true }
+      },
+      "dataStructure": {
+        "type": "array",
+        "state": [2, 7, 11, 15],
+        "highlights": [0],
+        "pointers": { "i": 0 }
+      }
+    },
+    {
+      "stepNumber": 4,
+      "lineNumber": 4,
+      "description": "complement = 9 - 2 = 7",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{}", "changed": false },
+        "i": { "value": "0", "changed": false },
+        "num": { "value": "2", "changed": false },
+        "complement": { "value": "7", "changed": true }
+      },
+      "dataStructure": {
+        "type": "array",
+        "state": [2, 7, 11, 15],
+        "highlights": [0],
+        "pointers": { "i": 0 }
+      }
+    },
+    {
+      "stepNumber": 5,
+      "lineNumber": 5,
+      "description": "Is 7 in seen {}? No → skip",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{}", "changed": false },
+        "i": { "value": "0", "changed": false },
+        "num": { "value": "2", "changed": false },
+        "complement": { "value": "7", "changed": false }
+      },
+      "dataStructure": {
+        "type": "hash-map",
+        "state": {},
+        "highlights": [],
+        "pointers": {}
+      },
+      "operation": { "type": "lookup", "description": "Lookup 7 in seen → not found" }
+    },
+    {
+      "stepNumber": 6,
+      "lineNumber": 7,
+      "description": "Store seen[2] = 0 (value → index)",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{2: 0}", "changed": true },
+        "i": { "value": "0", "changed": false },
+        "num": { "value": "2", "changed": false },
+        "complement": { "value": "7", "changed": false }
+      },
+      "dataStructure": {
+        "type": "hash-map",
+        "state": { "2": 0 },
+        "highlights": [0],
+        "pointers": {}
+      },
+      "operation": { "type": "insert", "description": "Insert seen[2] = 0" }
+    },
+    {
+      "stepNumber": 7,
+      "lineNumber": 3,
+      "description": "Loop iteration i=1, num=7",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{2: 0}", "changed": false },
+        "i": { "value": "1", "changed": true },
+        "num": { "value": "7", "changed": true }
+      },
+      "dataStructure": {
+        "type": "array",
+        "state": [2, 7, 11, 15],
+        "highlights": [1],
+        "pointers": { "i": 1 }
+      }
+    },
+    {
+      "stepNumber": 8,
+      "lineNumber": 4,
+      "description": "complement = 9 - 7 = 2",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{2: 0}", "changed": false },
+        "i": { "value": "1", "changed": false },
+        "num": { "value": "7", "changed": false },
+        "complement": { "value": "2", "changed": true }
+      },
+      "dataStructure": {
+        "type": "array",
+        "state": [2, 7, 11, 15],
+        "highlights": [1],
+        "pointers": { "i": 1 }
+      }
+    },
+    {
+      "stepNumber": 9,
+      "lineNumber": 5,
+      "description": "Is 2 in seen {2:0}? YES! → found the pair",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{2: 0}", "changed": false },
+        "i": { "value": "1", "changed": false },
+        "num": { "value": "7", "changed": false },
+        "complement": { "value": "2", "changed": false }
+      },
+      "dataStructure": {
+        "type": "hash-map",
+        "state": { "2": 0 },
+        "highlights": [0],
+        "pointers": {}
+      },
+      "operation": { "type": "lookup", "description": "Lookup 2 in seen → FOUND at index 0" }
+    },
+    {
+      "stepNumber": 10,
+      "lineNumber": 6,
+      "description": "Return [seen[2], i] = [0, 1] ✓ nums[0]+nums[1] = 2+7 = 9",
+      "variables": {
+        "nums": { "value": "[2, 7, 11, 15]", "changed": false },
+        "target": { "value": "9", "changed": false },
+        "seen": { "value": "{2: 0}", "changed": false },
+        "i": { "value": "1", "changed": false },
+        "num": { "value": "7", "changed": false },
+        "complement": { "value": "2", "changed": false },
+        "result": { "value": "[0, 1]", "changed": true }
+      },
+      "dataStructure": {
+        "type": "array",
+        "state": [2, 7, 11, 15],
+        "highlights": [0, 1],
+        "pointers": { "i": 1 }
+      },
+      "operation": { "type": "return", "description": "Return [0, 1]" }
+    }
+  ]
+}
