@@ -56,7 +56,7 @@ def bfs(start):
     steps = 0
 
     while queue:
-        for _ in range(len(queue)):
+        for _ in range(len(queue)):  # process level by level
             node = queue.popleft()
             # process node
 
@@ -92,6 +92,8 @@ def bfs_grid(grid, start_r, start_c):
 
 ## My Gotchas
 
+> Fill in after solving problems.
+
 - Always track `visited` to avoid infinite loops in graphs
 - For trees, no `visited` needed (no cycles)
 - BFS gives **shortest path** only for unweighted graphs
@@ -108,9 +110,9 @@ def bfs_grid(grid, start_r, start_c):
 
 ## Flashcards
 
-DFS vs BFS: which gives shortest path?::BFS — only for unweighted graphs.
+DFS vs BFS: which gives shortest path?::==BFS== — only for unweighted graphs.
 
-DFS vs BFS: which is better for "all paths" or cycle detection?::DFS
+DFS vs BFS: which is better for "all paths" or cycle detection?::==DFS==
 
 Why do you need a `visited` set in graph DFS/BFS but not tree DFS?::Graphs can have cycles; trees are acyclic by definition.
 
@@ -118,6 +120,6 @@ BFS level-order: how do you process one level at a time?::Loop `for _ in range(l
 
 Grid directions array::`DIRECTIONS = [(0,1),(0,-1),(1,0),(-1,0)]`
 
-Multi-source BFS: how do you initialise it?::Add all source nodes to the queue at the start (and mark all as visited) before the main loop.
+Multi-source BFS: how do you initialise it?::Add **all** source nodes to the queue at the start (and mark all as visited) before the main loop.
 
 Topological sort signal::Directed graph + "prerequisites" / "ordering" / "course schedule" → DFS cycle detection or BFS (Kahn's algorithm).

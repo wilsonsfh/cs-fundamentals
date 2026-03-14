@@ -17,8 +17,10 @@
 ```python
 import heapq
 
+# Build heap from list
 heap = [3, 1, 4, 1, 5]
 heapq.heapify(heap)        # O(n)
+
 heapq.heappush(heap, 2)    # push
 val = heapq.heappop(heap)  # pop min
 peek = heap[0]             # peek min (no pop)
@@ -40,14 +42,16 @@ max_val = -heapq.heappop(max_heap) # pop max (negate back)
 import heapq
 
 def k_largest(nums, k):
+    # Min-heap of size k: keeps k largest
     heap = nums[:k]
     heapq.heapify(heap)
 
     for num in nums[k:]:
         if num > heap[0]:
-            heapq.heapreplace(heap, num)
+            heapq.heapreplace(heap, num)  # pop min, push num
 
-    return heap
+    return heap  # k largest (not sorted)
+    # or: return heapq.nlargest(k, nums)  # simpler but O(n log k)
 ```
 
 ### Running median (two heaps)
@@ -57,15 +61,17 @@ import heapq
 
 class MedianFinder:
     def __init__(self):
-        self.small = []  # max-heap (negated)
-        self.large = []  # min-heap
+        self.small = []  # max-heap (negated) — lower half
+        self.large = []  # min-heap — upper half
 
     def addNum(self, num):
         heapq.heappush(self.small, -num)
 
+        # Balance: ensure small's max <= large's min
         if self.small and self.large and (-self.small[0] > self.large[0]):
             heapq.heappush(self.large, -heapq.heappop(self.small))
 
+        # Size balance: small has same or one more element
         if len(self.small) > len(self.large) + 1:
             heapq.heappush(self.large, -heapq.heappop(self.small))
         elif len(self.large) > len(self.small):
@@ -78,6 +84,8 @@ class MedianFinder:
 ```
 
 ## My Gotchas
+
+> Fill in after solving problems.
 
 - Python's `heapq` is **min-heap only** — negate for max-heap
 - `heapq.nlargest(k, iterable)` is O(n log k), not O(n)
@@ -95,11 +103,11 @@ class MedianFinder:
 
 ## Flashcards
 
-Python's `heapq` is a min-heap by default.
+Python's `heapq` is a ==min-heap== by default.
 
 How do you simulate a max-heap in Python?::Push and pop negated values: `heapq.heappush(h, -val)` → `max_val = -heapq.heappop(h)`
 
-K largest elements: use a min-heap or max-heap?::Min-heap of size k — when a new element beats the smallest (`heap[0]`), replace it.
+K largest elements: use a min-heap or max-heap?::==Min-heap== of size k — when a new element beats the smallest (`heap[0]`), replace it.
 
 Running median: two-heap invariants?
 ?
@@ -108,6 +116,6 @@ Running median: two-heap invariants?
 - `len(small) == len(large)` or `len(small) == len(large) + 1`
 - `max(small) <= min(large)`
 
-When pushing objects/tuples to a heap, comparison is on::The first element of the tuple — use `(priority, item)`.
+When pushing objects/tuples to a heap, comparison is on::The ==first element== of the tuple — use `(priority, item)`.
 
 `heapq.heapreplace(heap, val)` does what?::Pops the smallest element and pushes `val` in one O(log n) operation — more efficient than separate pop + push.

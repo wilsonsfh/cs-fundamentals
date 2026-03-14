@@ -56,6 +56,9 @@ def two_pointers_same(arr):
 
 > Fill in after solving problems.
 
+-
+-
+
 ## Key Problems
 
 | Problem | Difficulty | Key Insight | Link |
@@ -67,7 +70,7 @@ def two_pointers_same(arr):
 
 ## Flashcards
 
-Two pointers requires the array to be sorted (for opposite-direction variant).
+Two pointers requires the array to be ==sorted== (for opposite-direction variant).
 
 Opposite-direction two pointers: when do you move left vs right?
 ?

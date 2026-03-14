@@ -18,16 +18,16 @@ def merge(intervals):
     if not intervals:
         return []
 
-    intervals.sort(key=lambda x: x[0])
+    intervals.sort(key=lambda x: x[0])  # sort by start
     merged = [intervals[0]]
 
     for start, end in intervals[1:]:
         last_end = merged[-1][1]
 
-        if start <= last_end:
-            merged[-1][1] = max(last_end, end)
+        if start <= last_end:              # overlapping
+            merged[-1][1] = max(last_end, end)  # extend
         else:
-            merged.append([start, end])
+            merged.append([start, end])   # new interval
 
     return merged
 ```
@@ -40,10 +40,12 @@ def insert(intervals, new_interval):
     i = 0
     n = len(intervals)
 
+    # Add all intervals that end before new_interval starts
     while i < n and intervals[i][1] < new_interval[0]:
         result.append(intervals[i])
         i += 1
 
+    # Merge overlapping intervals with new_interval
     while i < n and intervals[i][0] <= new_interval[1]:
         new_interval[0] = min(new_interval[0], intervals[i][0])
         new_interval[1] = max(new_interval[1], intervals[i][1])
@@ -51,6 +53,7 @@ def insert(intervals, new_interval):
 
     result.append(new_interval)
 
+    # Add remaining intervals
     while i < n:
         result.append(intervals[i])
         i += 1
@@ -65,7 +68,7 @@ def canAttendMeetings(intervals):
     intervals.sort(key=lambda x: x[0])
 
     for i in range(1, len(intervals)):
-        if intervals[i][0] < intervals[i-1][1]:
+        if intervals[i][0] < intervals[i-1][1]:  # overlap
             return False
     return True
 ```
@@ -80,18 +83,20 @@ def minMeetingRooms(intervals):
         return 0
 
     intervals.sort(key=lambda x: x[0])
-    heap = []
+    heap = []  # min-heap of end times
 
     for start, end in intervals:
         if heap and heap[0] <= start:
-            heapq.heapreplace(heap, end)
+            heapq.heapreplace(heap, end)  # reuse room
         else:
-            heapq.heappush(heap, end)
+            heapq.heappush(heap, end)     # new room
 
     return len(heap)
 ```
 
 ## My Gotchas
+
+> Fill in after solving problems.
 
 - Sort by **start** for merging; sort by **end** for greedy interval selection
 - Two intervals `[a, b]` and `[c, d]` overlap if `a <= d AND c <= b`
@@ -108,7 +113,7 @@ def minMeetingRooms(intervals):
 
 ## Flashcards
 
-Merging intervals: sort by start.
+Merging intervals: sort by ==start==.
 
 Two intervals `[a,b]` and `[c,d]` overlap when::`a <= d AND c <= b` (equivalently: `c <= b` after sorting by start)
 
@@ -117,12 +122,12 @@ Merge intervals: when do you extend vs append?
 - `start <= merged[-1][1]` → overlapping → extend: `merged[-1][1] = max(merged[-1][1], end)`
 - Otherwise → new interval → `merged.append([start, end])`
 
-Minimum meeting rooms: which data structure and what does it store?::Min-heap storing end times of ongoing meetings — size of heap = rooms in use.
+Minimum meeting rooms: which data structure and what does it store?::Min-heap storing ==end times== of ongoing meetings — size of heap = rooms in use.
 
 Insert interval: 3 phases of the sweep?
 ?
-1. Add all intervals that end before new interval starts
+1. Add all intervals that **end before** new interval starts
 2. Merge all overlapping intervals into new interval
 3. Add remaining intervals
 
-Non-overlapping intervals: sort by end (greedy — always keep the interval that ends earliest).
+Non-overlapping intervals: sort by ==end== (greedy — always keep the interval that ends earliest).

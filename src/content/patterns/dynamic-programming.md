@@ -18,8 +18,11 @@ from functools import lru_cache
 def dp_topdown(n):
     @lru_cache(maxsize=None)
     def solve(i):
+        # base case
         if i <= 0:
             return base_value
+
+        # recurrence relation
         return max(solve(i - 1) + ..., solve(i - 2) + ...)
 
     return solve(n)
@@ -45,12 +48,15 @@ def dp_bottomup(n):
 def dp_2d(grid):
     m, n = len(grid), len(grid[0])
     dp = [[0] * n for _ in range(m)]
+
+    # Initialize base cases
     dp[0][0] = grid[0][0]
 
     for i in range(m):
         for j in range(n):
-            if i == 0 and j == 0:
+            if i  0 and j  0:
                 continue
+            # recurrence
             dp[i][j] = grid[i][j] + min(
                 dp[i-1][j] if i > 0 else float('inf'),
                 dp[i][j-1] if j > 0 else float('inf')
@@ -61,10 +67,17 @@ def dp_2d(grid):
 
 ## My Gotchas
 
+> Fill in after solving problems.
+
 - Define the state clearly before coding: `dp[i]` means "..."
 - Think about the recurrence relation before the base case
 - Space optimization: often can reduce from O(n²) to O(n) using rolling array
-- Unbounded Knapsack pattern - Reuse blocks unlimited times to reach a target length
+- Unbounded Knapsack pattern - Reuse blocks unlimited times to reach a target length. 
+	```python
+	for each capacity i:
+     for each item:
+        dp[i] += dp[i - item_size
+    ```
 
 ## Key Problems
 
@@ -81,7 +94,7 @@ def dp_2d(grid):
 
 Two conditions required for DP?::1. Optimal substructure  2. Overlapping subproblems
 
-Top-down DP uses memoization; bottom-up DP uses tabulation.
+Top-down DP uses ==memoization==; bottom-up DP uses ==tabulation==.
 
 House Robber recurrence::`dp[i] = max(dp[i-1], dp[i-2] + nums[i])`
 
@@ -89,8 +102,10 @@ Coin Change recurrence::`dp[amount] = min(dp[amount - coin] + 1 for coin in coin
 
 LCS recurrence?
 ?
+```
 if s1[i] == s2[j]: dp[i][j] = dp[i-1][j-1] + 1
-else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+else:              dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+```
 
 Before coding DP, what 3 things must you define?
 ?

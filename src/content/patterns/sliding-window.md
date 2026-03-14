@@ -49,6 +49,9 @@ def fixed_window(arr, k):
 
 > Fill in after solving problems.
 
+-
+-
+
 ## Key Problems
 
 | Problem | Difficulty | Key Insight | Link |

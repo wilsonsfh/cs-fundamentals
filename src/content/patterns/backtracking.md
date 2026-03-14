@@ -13,16 +13,23 @@
 
 ```python
 def backtrack(candidates, path, result, start=0):
+    # Base case: path is a valid solution
     if is_solution(path):
         result.append(path[:])  # copy! not reference
         return
 
     for i in range(start, len(candidates)):
+        # Pruning: skip invalid choices
         if should_prune(candidates[i], path):
             continue
 
+        # Choose
         path.append(candidates[i])
+
+        # Explore (start=i for reuse, start=i+1 for no reuse)
         backtrack(candidates, path, result, start=i + 1)
+
+        # Un-choose (backtrack)
         path.pop()
 
 def solve(candidates):
@@ -38,6 +45,7 @@ def backtrack_dedup(candidates, path, result, start=0):
     result.append(path[:])
 
     for i in range(start, len(candidates)):
+        # Skip duplicates at same level
         if i > start and candidates[i] == candidates[i - 1]:
             continue
 
@@ -50,6 +58,8 @@ candidates.sort()
 ```
 
 ## My Gotchas
+
+> Fill in after solving problems.
 
 - **Always copy path** when appending to result: `result.append(path[:])` not `result.append(path)`
 - **Sort input** before deduplication pruning
@@ -77,13 +87,13 @@ Backtracking template: 3 steps inside the loop?
 
 Why must you copy path when appending to result?::`path` is mutated during backtracking — `result.append(path[:])` captures the current state; `result.append(path)` just stores a reference.
 
-`start=i` vs `start=i+1` in combination problems?::`start=i` → element can be reused (Combination Sum). `start=i+1` → each element used at most once.
+`start=i` vs `start=i+1` in combination problems?::`start=i` → element can be reused (Combination Sum).  `start=i+1` → each element used at most once.
 
 Deduplication in backtracking requires 2 things?
 ?
 1. Sort the input first
 2. Skip: `if i > start and candidates[i] == candidates[i-1]: continue`
 
-Permutations vs Combinations: key difference in template?::Permutations use a `used[]` boolean array (no start index). Combinations use a `start` index.
+Permutations vs Combinations: key difference in template?::Permutations use a `used[]` boolean array (no start index — all positions revisitable). Combinations use a `start` index.
 
 When does backtracking add to result: at base case or every call?::Base case only for fixed-length results (permutations). Every call for subsets.

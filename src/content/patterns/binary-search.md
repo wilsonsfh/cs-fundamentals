@@ -50,20 +50,23 @@ def lower_bound(arr, target):
 
 ```python
 def binary_search_answer(lo, hi):
+    # Define: feasible(mid) returns True if mid satisfies the condition
     def feasible(mid):
         pass  # implement condition check
 
     while lo < hi:
         mid = lo + (hi - lo) // 2
         if feasible(mid):
-            hi = mid
+            hi = mid        # answer could be mid or smaller
         else:
-            lo = mid + 1
+            lo = mid + 1    # mid is too small
 
     return lo  # smallest value satisfying feasible()
 ```
 
 ## My Gotchas
+
+> Fill in after solving problems.
 
 - `lo <= hi` for exact search, `lo < hi` for bound search
 - `hi = len(arr)` (not `len-1`) when searching for insertion point
@@ -80,7 +83,7 @@ def binary_search_answer(lo, hi):
 
 ## Flashcards
 
-Exact search uses `lo <= hi`; lower bound search uses `lo < hi`.
+Exact search uses `lo <= hi`; lower bound search uses ==`lo < hi`==.
 
 Safe midpoint formula (no overflow)::`mid = lo + (hi - lo) // 2`
 

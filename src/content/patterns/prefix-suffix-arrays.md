@@ -1,14 +1,5 @@
-# Prefix & Suffix Arrays
-
-## When to Use
-
-- Precompute left and right answers for range queries
-- Problems requiring "product/sum/count except self"
-- Split array into two parts and combine results
-
-**Signal:** Need to efficiently query ranges or exclude one element — precompute from both directions.
-
-## Template
+- precompute left and right answers
+- full loop to filter duplicates, but scan order matters, combine left and right by half
 
 ```python
 arr = [3, 1, 4, 1, 5]
@@ -21,6 +12,7 @@ for i in range(len(arr)):
     prefix[i] = len(seen)
 
 # prefix = [1, 2, 3, 3, 4]
+#            3  3,1  3,1,4  3,1,4  3,1,4,5
 
 # SUFFIX - scan right to left
 suffix = [0] * len(arr)
@@ -30,43 +22,48 @@ for i in range(len(arr) - 1, -1, -1):
     suffix[i] = len(seen)
 
 # suffix = [4, 4, 3, 2, 1]
+#            all  1,4,1,5  4,1,5  1,5  5
 ```
 
-### Product Except Self
-
+The key insight — scanning **direction matters**:
+- Prefix: set grows left→right, captures "distinct so far from left"
+- Suffix: set grows right→left, captures "distinct so far from right"
 ```python
-def productExceptSelf(nums):
-    n = len(nums)
-    output = [1] * n
+left  = arr[0..i]    → prefix[i]
+right = arr[i+1..n]  → suffix[i+1]
 
-    left = 1
-    for i in range(n):
-        output[i] = left
-        left *= nums[i]
+answer = max(prefix[i] + suffix[i+1]) for all i
 
-    right = 1
-    for i in range(n - 1, -1, -1):
-        output[i] *= right
-        right *= nums[i]
+# ---
+arr     =  [3,  1,  4,  1,  5]
+prefix  =  [1,  2,  3,  3,  4]
+suffix  =  [4,  4,  3,  2,  1]
 
-    return output
+split at 0: prefix[0] + suffix[1] = 1 + 4 = 5
+split at 1: prefix[1] + suffix[2] = 2 + 3 = 5  ← also max
+split at 2: prefix[2] + suffix[3] = 3 + 2 = 5  ← also max
+split at 3: prefix[3] + suffix[4] = 3 + 1 = 4
 ```
-
-## My Gotchas
-
-- Scanning direction matters — prefix captures "so far from left", suffix captures "so far from right"
-- For "product except self", use a lag — each position gets the product of everything before it (left pass) and everything after it (right pass)
 
 ## Key Problems
-
-| Problem | Difficulty | Key Insight | Link |
-|---------|-----------|-------------|------|
-| Product Except Self | Medium | left and right product arrays with lag | [LC 238](https://leetcode.com/problems/product-of-array-except-self/) |
-
-## Flashcards
-
-Prefix array: scan direction?::Left to right — captures cumulative result from the start.
-
-Suffix array: scan direction?::Right to left — captures cumulative result from the end.
-
-Product Except Self: how to achieve O(n) without division?::Two passes — left pass stores product of all elements before index i, right pass multiplies by product of all elements after index i.
+- getMaxSum HackerRank
+- productExceptSelf LeetCode
+	```python
+	class Solution:
+		def productExceptSelf(self, nums: List[int]) -> List[int]:
+			n = len(nums)
+			output = [1] * n
+			# idea is to gap the element itself, so use left and right to compute both sides with a "lag"
+		
+			left = 1
+			for i in range(n):
+				output[i] = left #product is complete at end, afterwards incrementally reverse(i) steps behind
+				left *= nums[i] #set up for next iteration to right
+			
+			right = 1
+			for i in range(n - 1, -1 , -1):
+				output[i] *= right # missing right-side products to fill in the gap from missing steps in left
+				right *= nums[i]
+			
+			return output
+	```
