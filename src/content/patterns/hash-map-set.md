@@ -10,6 +10,8 @@
 
 **Signal:** Brute force needs nested loops for lookup → replace inner loop with a hash map/set for O(1) access.
 
+---
+
 ## Templates
 
 ### Duplicate detection (scoped per key)
@@ -70,6 +72,8 @@ for item in items:
 
 return list(groups.values())
 ```
+
+---
 
 ## `defaultdict` Quick Reference
 
@@ -137,12 +141,16 @@ d = defaultdict(set)
 d[key].add(val)     # auto-creates set() if key is new
 ```
 
+---
+
 ## My Gotchas
 
 > Fill in after solving problems.
 
 - Using one flat set for all categories — loses which category a value belongs to; use `defaultdict(set)` with a key per category
 - Forgetting that `defaultdict` creates a key on read — `key in d` won't trigger creation, but `d[key]` will
+
+---
 
 ## Key Problems
 
@@ -153,6 +161,22 @@ d[key].add(val)     # auto-creates set() if key is new
 | Contains Duplicate | Easy | set lookup — if element already in set, it's a duplicate | [LC 217](https://leetcode.com/problems/contains-duplicate/) |
 | Group Anagrams | Medium | `sorted(word)` as key groups all anagrams into same bucket | [LC 49](https://leetcode.com/problems/group-anagrams/) |
 | Top K Frequent Elements | Medium | `Counter` + heap or bucket sort | [LC 347](https://leetcode.com/problems/top-k-frequent-elements/) |
+
+---
+
+## Problem Flashcards
+
+### LC 128 — Longest Consecutive Sequence
+
+Why convert `nums` to a set before iterating?::O(1) membership lookups. Without it, `num + 1 in nums` on a list is O(n) per check → O(n²) total.
+
+What does `if num - 1 not in existing` guard do?::Ensures you only start counting from the **lowest element** of each sequence. Without it, every element restarts a count → sequences counted multiple times.
+
+How is LC 128 O(n) despite a while loop inside a for loop?::Each element is touched at most twice — once in the outer for loop (guard check), once in the while loop from its sequence's lowest element. Total = 2n = O(n).
+
+Why iterate over `existing` (the set) instead of `nums` in LC 128?::Deduplicates. Duplicates in `nums` would trigger redundant sequence counts from the same starting point.
+
+---
 
 ## Flashcards
 

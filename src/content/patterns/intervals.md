@@ -9,6 +9,8 @@
 
 **Signal:** Array of `[start, end]` pairs → sort by start (or end) then sweep.
 
+---
+
 ## Template
 
 ### Merge overlapping intervals
@@ -94,6 +96,8 @@ def minMeetingRooms(intervals):
     return len(heap)
 ```
 
+---
+
 ## My Gotchas
 
 > Fill in after solving problems.
@@ -101,6 +105,8 @@ def minMeetingRooms(intervals):
 - Sort by **start** for merging; sort by **end** for greedy interval selection
 - Two intervals `[a, b]` and `[c, d]` overlap if `a <= d AND c <= b`
 - After sorting, only need to compare with the **last merged** interval
+
+---
 
 ## Key Problems
 
@@ -111,16 +117,18 @@ def minMeetingRooms(intervals):
 | Meeting Rooms II | Medium | min-heap of end times | [LC 253](https://leetcode.com/problems/meeting-rooms-ii/) |
 | Non-overlapping Intervals | Medium | sort by end, greedy | [LC 435](https://leetcode.com/problems/non-overlapping-intervals/) |
 
+---
+
 ## Flashcards
 
 Merging intervals: sort by ==start==.
 
-Two intervals `[a,b]` and `[c,d]` overlap when::`a <= d AND c <= b` (equivalently: `c <= b` after sorting by start)
+Two intervals `[a,b]` and `[c,d]` overlap when::``a <= d AND c <= b`` (equivalently: ``c <= b`` after sorting by start)
 
 Merge intervals: when do you extend vs append?
 ?
-- `start <= merged[-1][1]` → overlapping → extend: `merged[-1][1] = max(merged[-1][1], end)`
-- Otherwise → new interval → `merged.append([start, end])`
+- ``start <= merged[-1][1]`` → overlapping → extend: ``merged[-1][1] = max(merged[-1][1], end)``
+- Otherwise → new interval → ``merged.append([start, end])``
 
 Minimum meeting rooms: which data structure and what does it store?::Min-heap storing ==end times== of ongoing meetings — size of heap = rooms in use.
 

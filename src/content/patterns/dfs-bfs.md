@@ -10,6 +10,8 @@
 - "Shortest path" or "minimum steps" → BFS
 - "All paths", "connected components", "can you reach X" → DFS
 
+---
+
 ## Template
 
 ### DFS — Recursive (tree/graph)
@@ -90,6 +92,8 @@ def bfs_grid(grid, start_r, start_c):
                 queue.append((nr, nc))
 ```
 
+---
+
 ## My Gotchas
 
 > Fill in after solving problems.
@@ -97,6 +101,8 @@ def bfs_grid(grid, start_r, start_c):
 - Always track `visited` to avoid infinite loops in graphs
 - For trees, no `visited` needed (no cycles)
 - BFS gives **shortest path** only for unweighted graphs
+
+---
 
 ## Key Problems
 
@@ -108,6 +114,8 @@ def bfs_grid(grid, start_r, start_c):
 | Binary Tree Level Order Traversal | Medium | BFS level by level | [LC 102](https://leetcode.com/problems/binary-tree-level-order-traversal/) |
 | Rotten Oranges | Medium | multi-source BFS | [LC 994](https://leetcode.com/problems/rotting-oranges/) |
 
+---
+
 ## Flashcards
 
 DFS vs BFS: which gives shortest path?::==BFS== — only for unweighted graphs.
@@ -116,9 +124,9 @@ DFS vs BFS: which is better for "all paths" or cycle detection?::==DFS==
 
 Why do you need a `visited` set in graph DFS/BFS but not tree DFS?::Graphs can have cycles; trees are acyclic by definition.
 
-BFS level-order: how do you process one level at a time?::Loop `for _ in range(len(queue))` before dequeuing — captures the current level size before adding children.
+BFS level-order: how do you process one level at a time?::Loop ``for _ in range(len(queue))`` before dequeuing — captures the current level size before adding children.
 
-Grid directions array::`DIRECTIONS = [(0,1),(0,-1),(1,0),(-1,0)]`
+Grid directions array::``DIRECTIONS = [(0,1),(0,-1),(1,0),(-1,0)]``
 
 Multi-source BFS: how do you initialise it?::Add **all** source nodes to the queue at the start (and mark all as visited) before the main loop.
 

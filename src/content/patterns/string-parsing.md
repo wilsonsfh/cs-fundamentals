@@ -8,6 +8,8 @@
 
 Signal: Input is a string with a predictable structure/pattern that needs to be decoded or reformatted.
 
+---
+
 ## Template
 
 ```python
@@ -36,6 +38,8 @@ result = f"{year}-{month:02d}-{day:02d}"   # f-string formatting
 result = "-".join([year, month, day])       # join list into string
 ```
 
+---
+
 ## Ordered List as Lookup (no hashmap)
 
 ```python
@@ -46,6 +50,8 @@ months = ["Jan","Feb","Mar","Apr","May","Jun",
 month_num = months.index("Oct") + 1   # → 10
 ```
 
+---
+
 ## My Gotchas
 
 Fill in after solving problems.
@@ -54,6 +60,8 @@ Fill in after solving problems.
 - `int("04")` works fine, leading zeros don't cause issues in Python
 - `f"{n:02d}"` only works for integers, not strings — convert first with `int()`
 - `.index()` throws `ValueError` if element not found — only use when input is guaranteed valid
+
+---
 
 ## Key Problems
 
@@ -64,6 +72,8 @@ Fill in after solving problems.
 | Valid Anagram | Easy | split into chars, sort or count | LC 242 |
 | Decode String | Medium | stack-based parsing | LC 394 |
 | Date conversion (this problem) | Easy | split + slice + list lookup | — |
+
+---
 
 ## Flashcards
 

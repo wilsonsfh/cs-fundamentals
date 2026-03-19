@@ -10,6 +10,8 @@
 
 **Signal:** "K-th", "Top K", "K closest", "K most frequent" → heap.
 
+---
+
 ## Template
 
 ### Min-heap (Python default)
@@ -83,6 +85,8 @@ class MedianFinder:
         return (-self.small[0] + self.large[0]) / 2
 ```
 
+---
+
 ## My Gotchas
 
 > Fill in after solving problems.
@@ -90,6 +94,8 @@ class MedianFinder:
 - Python's `heapq` is **min-heap only** — negate for max-heap
 - `heapq.nlargest(k, iterable)` is O(n log k), not O(n)
 - For objects, push tuples: `(priority, item)` — comparison goes by first element
+
+---
 
 ## Key Problems
 
@@ -101,21 +107,23 @@ class MedianFinder:
 | Find Median from Data Stream | Hard | two heaps | [LC 295](https://leetcode.com/problems/find-median-from-data-stream/) |
 | K Closest Points to Origin | Medium | min-heap on distance | [LC 973](https://leetcode.com/problems/k-closest-points-to-origin/) |
 
+---
+
 ## Flashcards
 
 Python's `heapq` is a ==min-heap== by default.
 
-How do you simulate a max-heap in Python?::Push and pop negated values: `heapq.heappush(h, -val)` → `max_val = -heapq.heappop(h)`
+How do you simulate a max-heap in Python?::Push and pop negated values: ``heapq.heappush(h, -val)`` → ``max_val = -heapq.heappop(h)``
 
-K largest elements: use a min-heap or max-heap?::==Min-heap== of size k — when a new element beats the smallest (`heap[0]`), replace it.
+K largest elements: use a min-heap or max-heap?::==Min-heap== of size k — when a new element beats the smallest (``heap[0]``), replace it.
 
 Running median: two-heap invariants?
 ?
-- `small` (max-heap) holds the lower half
-- `large` (min-heap) holds the upper half
-- `len(small) == len(large)` or `len(small) == len(large) + 1`
-- `max(small) <= min(large)`
+- ``small`` (max-heap) holds the lower half
+- ``large`` (min-heap) holds the upper half
+- ``len(small) == len(large)`` or ``len(small) == len(large) + 1``
+- ``max(small) <= min(large)``
 
-When pushing objects/tuples to a heap, comparison is on::The ==first element== of the tuple — use `(priority, item)`.
+When pushing objects/tuples to a heap, comparison is on::The ==first element== of the tuple — use ``(priority, item)``.
 
-`heapq.heapreplace(heap, val)` does what?::Pops the smallest element and pushes `val` in one O(log n) operation — more efficient than separate pop + push.
+``heapq.heapreplace(heap, val)`` does what?::Pops the smallest element and pushes ``val`` in one O(log n) operation — more efficient than separate pop + push.
