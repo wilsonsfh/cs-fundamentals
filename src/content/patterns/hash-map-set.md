@@ -149,6 +149,8 @@ d[key].add(val)     # auto-creates set() if key is new
 
 - Using one flat set for all categories — loses which category a value belongs to; use `defaultdict(set)` with a key per category
 - Forgetting that `defaultdict` creates a key on read — `key in d` won't trigger creation, but `d[key]` will
+- `sorted(word)` returns a **list**, not a string — lists are unhashable, can't be dict keys; use `tuple(sorted(word))` or `"".join(sorted(word))`
+- `lst = lst.sort()` → `lst` becomes `None` — `.sort()` returns `None`, not the sorted list; see [[../libraries/python/sorted]]
 
 ---
 
@@ -165,6 +167,32 @@ d[key].add(val)     # auto-creates set() if key is new
 ---
 
 ## Problem Flashcards
+
+### LC 49 — Group Anagrams
+
+Why does sorting each word produce a canonical anagram key?::Anagrams contain the same characters — sorting them always produces the same sequence. `"eat"`, `"tea"`, `"ate"` all sort to `"aet"`.
+
+Why use `defaultdict(list)` over plain `dict` for Group Anagrams?::No need to check `if key in hashmap` before appending. `defaultdict(list)` auto-initialises to `[]` on first access — one line instead of three.
+
+Group Anagrams: `sorted(word)` returns what, and why does it need wrapping?::A **list** of chars — lists are unhashable and can't be dict keys. Use `tuple(sorted(word))` or `"".join(sorted(word))` to get a hashable key.
+
+Group Anagrams: why `list(hashmap.values())` at the end?::LeetCode expects `List[List[str]]`. `dict.values()` returns a view object, not a list — wrap it.
+
+`sorted("bca")` vs `"bca".sort()` — which works on strings?::`sorted("bca")` — built-in function, works on any iterable. `.sort()` is a list method; strings don't have it → `AttributeError`.
+
+---
+
+### LC 347 — Top K Frequent Elements
+
+LC 347: why put `count` before `num` in `[count, num]`?::Python sorts lists lexicographically left to right. Count first means `freqlist.sort()` ranks by frequency. `[num, count]` would sort by the number itself.
+
+LC 347: `pop()` vs `pop(0)` after ascending sort — which gives highest frequency?::`pop()` removes the rightmost (highest after ascending sort), O(1). `pop(0)` removes the lowest and is O(n) due to shifting.
+
+`heapq.nlargest(k, hashmap, key=hashmap.get)` — what does iterating `hashmap` give?::Dict **keys** only. `key=hashmap.get` ranks each key by its frequency. Returns top k keys directly.
+
+Sort vs heap for Top K — when does heap win?::When k << n. Heap is O(n log k); sort is O(n log n). Heap also uses O(k) space vs O(n).
+
+---
 
 ### LC 128 — Longest Consecutive Sequence
 
