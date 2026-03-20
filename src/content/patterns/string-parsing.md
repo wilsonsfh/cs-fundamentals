@@ -54,12 +54,14 @@ month_num = months.index("Oct") + 1   # → 10
 
 ## My Gotchas
 
-Fill in after solving problems.
-- `split()` with no args splits on any whitespace and strips extras; `split(" ")` is stricter
+- `split()` with no args splits on any whitespace and strips extras; `split(" ")` is stricter and produces empty strings on multiple spaces
 - Slicing never throws — `s[:-2]` on `"4th"` safely gives `"4"`
 - `int("04")` works fine, leading zeros don't cause issues in Python
 - `f"{n:02d}"` only works for integers, not strings — convert first with `int()`
 - `.index()` throws `ValueError` if element not found — only use when input is guaranteed valid
+- `len(s)` returns int — must `str(len(s))` before concatenating into a string
+- `int(s[i:j])` uses `()` — `int[s[i:j]]` is a subscript and raises `TypeError`
+- `.append()` is for lists; `.add()` is for sets — don't mix them
 
 ---
 
@@ -67,11 +69,26 @@ Fill in after solving problems.
 
 | Problem | Difficulty | Key Insight | Link |
 |---------|------------|-------------|------|
+| Encode and Decode Strings | Medium | length-prefix encoding — `len(s)#s` makes `#` inside strings safe | [LC 271](https://leetcode.com/problems/encode-and-decode-strings/) |
 | Reverse Words in a String | Medium | split() + reverse + join | LC 151 |
 | String to Integer (atoi) | Medium | strip, sign, digit-by-digit | LC 8 |
 | Valid Anagram | Easy | split into chars, sort or count | LC 242 |
 | Decode String | Medium | stack-based parsing | LC 394 |
 | Date conversion (this problem) | Easy | split + slice + list lookup | — |
+
+---
+
+## Problem Flashcards
+
+### LC 271 — Encode and Decode Strings
+
+Encode/Decode: why can't you use `"#"` alone as a delimiter?::Strings can contain `#`. Splitting on it breaks boundaries. Length-prefix (`len(s)#s`) lets the decoder skip `#` inside content by counting characters instead of scanning.
+
+Encode/Decode: what does `j+1` do in the decode loop?::`j` lands on `#`, so `j+1` is the first char of the word. `j+1+length` is the end. `i = j+1+length` advances to the next chunk.
+
+Encode/Decode: why `str(len(s))`?::`len()` returns an int — can't concatenate int + str. Must cast explicitly.
+
+`s.index("#", start)` — what does it do?::Finds the next `#` from `start`. Replaces a manual inner while loop scanning forward character by character.
 
 ---
 
