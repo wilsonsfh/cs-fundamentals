@@ -286,6 +286,20 @@ LC 567: why must you `del` zero-count keys from the window dict?::`{'a':1,'b':0}
 
 LC 567: which string counts upfront and why?::`s1` — static, never changes. `s2` window counts update incrementally (add incoming, subtract outgoing). Counting `s2` upfront gives global not window frequencies.
 
+### LC 76 — Minimum Window Substring
+
+LC 76: what problem type is Minimum Window Substring really?::Frequency coverage — find the smallest window where `window[c] >= need[c]` for all `c` in `t`. Not substring matching, not permutation generation.
+
+LC 76: what do `have` and `need_count` represent?::`need_count = len(need)` = number of unique chars that must be satisfied. `have` = number of those currently meeting their required frequency. Valid when `have == need_count`.
+
+LC 76: why `==` when expanding and `<` when shrinking for `have`?::On expand, `==` avoids double-counting overages (window has 3 A's but need 1 — `have` only increments once). On shrink, `<` only decrements when dropping from satisfied to unsatisfied, not on every count decrease.
+
+LC 76: why store `[left, right]` indices instead of the substring?::Slicing inside the loop copies the substring on every update — O(n) per update = O(n²) total. Storing indices is O(1); slice once at the end.
+
+LC 76: why `while` for shrinking, not `if`?::Minimising window — need to shrink as far left as possible each time the window is valid. `if` would only shrink once, missing tighter windows.
+
+LC 76: `need_count = len(need)` vs `len(t)` — why does it matter?::For `t = "AAB"`, `len(t) = 3` but `len(need) = 2`. Using `len(t)` as the target means `have` would never reach it — off by duplicates.
+
 ---
 
 ## Flashcards
