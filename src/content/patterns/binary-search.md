@@ -94,7 +94,7 @@ def binary_search_answer(lo, hi):
 Exact search uses `lo <= hi`; lower bound search uses ==`lo < hi`==.
 
 Safe midpoint formula (no overflow)::``mid = lo + (hi - lo) // 2``
-<!--SR:!2026-03-10,3,250-->
+<!--SR:!2026-03-27,2,230-->
 
 Binary search on answer: what must be true about the predicate?::It must be monotonic — all False then all True (or vice versa) across the search space.
 
