@@ -65,6 +65,38 @@ month_num = months.index("Oct") + 1   # → 10
 
 ---
 
+## Base Conversion Pattern
+
+Convert a number from base 10 to base N using repeated division:
+
+```python
+def to_base(num, base):
+    if num == 0:
+        return "0"
+    res = ""
+    while num > 0:
+        remainder = num % base
+        res = str(remainder) + res   # PREPEND — remainders come in reverse order
+        num //= base
+    return res
+```
+
+### Why Prepend (not Append)
+
+```
+num = 13, base = 3
+
+Step 1: 13 % 3 = 1  → LSB (rightmost digit)
+Step 2:  4 % 3 = 1
+Step 3:  1 % 3 = 1  → MSB (leftmost digit)
+
+Remainder order: 1, 1, 1 → correct number: 111 (in base 3)
+```
+
+> First remainder = least significant digit. Prepending builds the correct order immediately. Appending would give `111` reversed = still `111` here, but for `13 in base 2` → `1101` reversed wrong = `1011`. Always prepend or reverse.
+
+---
+
 ## Key Problems
 
 | Problem | Difficulty | Key Insight | Link |
@@ -111,3 +143,11 @@ Join a list into a string?
 
 When to use `split()` vs `split(" ")`?
 :: `split()` handles multiple spaces and strips edges; `split(" ")` is literal and can produce empty strings
+
+Base conversion: why prepend the remainder instead of appending?::The first remainder is the least significant digit (rightmost). Prepending builds correct digit order directly. Appending requires reversing at the end.
+
+Base conversion: what's the edge case you must handle?::When `num == 0` — the while loop never runs, so return `"0"` explicitly before the loop.
+
+Detect punctuation/symbol in a string?::`not c.isalnum()` — True for anything that isn't a letter or digit. `isupper()`, `isdigit()`, `isalnum()` cover uppercase / number / letter-or-number detection.
+
+Password validation: why normalize with `.lower()` before checking substrings?::Case-insensitive matches — `"passWord"` should match the word `"password"`. Always `.lower()` the input before substring checks.
