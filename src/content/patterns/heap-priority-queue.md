@@ -6,9 +6,10 @@
 - **Top-K** elements (frequent, closest, largest)
 - **Merge K sorted** lists/arrays
 - **Running median** (two heaps)
-- Greedy problems needing efficient min/max extraction
+- **Greedy simulation** — always pick max/min, the picked element mutates after selection
 
 **Signal:** "K-th", "Top K", "K closest", "K most frequent" → heap.
+**Signal:** "always pick the largest/most expensive", value **changes after being used** → greedy max-heap.
 
 ---
 
@@ -56,6 +57,36 @@ def k_largest(nums, k):
     # or: return heapq.nlargest(k, nums)  # simpler but O(n log k)
 ```
 
+### Greedy Simulation (max-heap with mutation)
+
+Use when: always pick the current maximum, use it, then push back a mutated version.
+
+```python
+import heapq
+
+heap = [-x for x in arr]
+heapq.heapify(heap)          # O(n)
+
+for _ in range(m):
+    top = -heapq.heappop(heap)      # extract current max
+    revenue += top                  # use it
+    if top - 1 > 0:
+        heapq.heappush(heap, -(top - 1))  # push back mutated value
+```
+
+**Trace — Max Rental Revenue** (`arr = [1,2,4], m = 4`):
+
+| Step | Pop | Revenue | Push back | Heap after |
+|---|---|---|---|---|
+| 1 | 4 | 4 | 3 | [-3, -2, -1] |
+| 2 | 3 | 7 | 2 | [-2, -2, -1] |
+| 3 | 2 | 9 | 1 | [-2, -1, -1] |
+| 4 | 2 | 11 | 1 | [-1, -1, -1] |
+
+Answer: 11
+
+> Why heap? Brute force = sort after each mutation → O(n log n) per step. Heap keeps the array "sorted" after each pop/push in O(log n).
+
 ### Running median (two heaps)
 
 ```python
@@ -89,11 +120,11 @@ class MedianFinder:
 
 ## My Gotchas
 
-> Fill in after solving problems.
-
 - Python's `heapq` is **min-heap only** — negate for max-heap
 - `heapq.nlargest(k, iterable)` is O(n log k), not O(n)
 - For objects, push tuples: `(priority, item)` — comparison goes by first element
+- Greedy simulation: guard `if top - 1 > 0` before pushing back — don't push 0 or negatives into the heap
+- Greedy simulation signal: "value changes after being used" (mutates) → heap is necessary to maintain order after mutation
 
 ---
 
@@ -110,6 +141,12 @@ class MedianFinder:
 ---
 
 ## Flashcards
+
+What's the signal that greedy + max-heap works (not just greedy)?::You always pick the global max/min AND the picked element mutates (changes value) after use — the ordering shifts each step, so you need a structure that stays sorted after each mutation.
+
+Greedy simulation: why is heap O(m log n) but brute force O(m·n log n)?::Heap maintains sorted order after each pop/push in O(log n). Brute force re-sorts after each mutation — O(n log n) per step, O(m) steps.
+
+Greedy simulation: what's the guard condition before pushing back?::`if top - 1 > 0` — only push back if the mutated value is still positive/valid. Pushing 0 or negative values would pollute the heap.
 
 Python's `heapq` is a ==min-heap== by default.
 

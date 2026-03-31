@@ -5,8 +5,10 @@
 - **Per-element context** — each answer needs information from both sides of that element (e.g. product except self, count of distinct elements on each side)
 - **Precompute left/right state** — scanning once left-to-right and once right-to-left captures everything before and after each index
 - **Avoid O(n²)** — instead of recomputing a running value for every index separately, precompute it in two passes
+- **Removal simulation** — "remove index k and check a property" → each k is a candidate; prefix[k] + suffix[k+1] simulates the gap with O(1) per check
 
 **Signal:** answer at index `i` depends on elements to the left *and* right of `i` — reach for prefix/suffix arrays.
+**Signal:** "remove one element and check something" + O(n²) brute force → prefix/suffix turns each check to O(1).
 
 ---
 
@@ -89,6 +91,55 @@ for i in range(n - 1, -1, -1):
 
 ---
 
+### Removal simulation (n+1 sizing, try all candidates)
+
+Use when: "remove index k, then check a property across the remaining elements." No actual removal — the gap between `prefix[k]` and `suffix[k+1]` means k is never included.
+
+```python
+n = len(arr)
+prefix_even = [0] * (n + 1)   # size n+1 so prefix[n] is valid
+prefix_odd  = [0] * (n + 1)
+suffix_even = [0] * (n + 1)
+suffix_odd  = [0] * (n + 1)
+
+for i in range(n):
+    prefix_even[i+1] = prefix_even[i] + (arr[i] if i % 2 == 0 else 0)
+    prefix_odd[i+1]  = prefix_odd[i]  + (arr[i] if i % 2 == 1 else 0)
+
+for j in range(n - 1, -1, -1):
+    suffix_even[j] = suffix_even[j+1] + (arr[j] if j % 2 == 0 else 0)
+    suffix_odd[j]  = suffix_odd[j+1]  + (arr[j] if j % 2 == 1 else 0)
+
+for k in range(n):             # try every candidate in O(1)
+    left_even  = prefix_even[k]
+    left_odd   = prefix_odd[k]
+    right_even = suffix_even[k+1]
+    right_odd  = suffix_odd[k+1]
+    # check condition using the four values
+```
+
+**Why n+1?** `prefix[0] = 0` is the base case (nothing accumulated). Without it, `prefix[i+1] = prefix[i] + ...` has no starting point and `prefix[n]` (the full array) would be out of bounds.
+
+**Parity flip on removal:** Removing index k causes everything after it to shift left by 1 — their 0-based index changes, so their even/odd parity flips.
+
+```
+Original: [2, 5, 3, 1]   (0-indexed: E O E O)
+Remove k=1 (value 5):
+Remaining: [2, 3, 1]     (1-indexed for new array: O E O)
+                                  ↑ index 2,3 flipped parity
+```
+
+So the correct combination after removing k is:
+
+```python
+# Elements before k keep their parity (0-indexed)
+# Elements after k flip parity (shift left by 1)
+new_odd_sum  = prefix_even[k] + suffix_odd[k+1]   # before: 0-indexed even → after: 1-indexed odd ✓
+new_even_sum = prefix_odd[k]  + suffix_even[k+1]
+```
+
+---
+
 ## `reversed(range(n))` — visit order only
 
 ```python
@@ -134,6 +185,14 @@ LC 238: why not divide the total product by `nums[i]`?::Breaks when the array co
 ---
 
 ## Flashcards
+
+Removal simulation: what is the "gap" trick and why is there no actual removal?::End prefix at k (`prefix[k]`) and start suffix at k+1 (`suffix[k+1]`). Index k is never added to either side — it falls through the gap between them without any removal operation.
+
+Why size n+1 for prefix/suffix arrays in removal simulation?::`prefix[0] = 0` is the base case (no elements accumulated). Allows the recurrence `prefix[i+1] = prefix[i] + ...` to start cleanly, and makes `prefix[n]` (full array sum) valid without bounds errors.
+
+Parity flip: removing index k shifts all elements after k left by 1. What happens to their parity?::Their even/odd parity flips. 0-indexed even becomes 1-indexed odd, and vice versa. So the correct combination for a parity-dependent property is `prefix_even[k] + suffix_odd[k+1]` (not suffix_even).
+
+Removal simulation is O(n) not O(n²) because...?::Each candidate check at index k is O(1) using precomputed prefix/suffix arrays. Three passes (prefix build, suffix build, candidate scan) vs O(n) recalculation per candidate in brute force.
 
 When should you reach for prefix/suffix arrays?::When the answer at each index depends on elements on **both sides** of it — precompute left and right state in two passes instead of recomputing per index.
 
