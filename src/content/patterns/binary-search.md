@@ -70,11 +70,71 @@ def binary_search_answer(lo, hi):
 
 ## My Gotchas
 
-> Fill in after solving problems.
-
-- `lo <= hi` for exact search, `lo < hi` for bound search
+- `lo <= hi` for exact search, `lo < hi` for bound search — **do not mix**
 - `hi = len(arr)` (not `len-1`) when searching for insertion point
 - Avoid integer overflow: `mid = lo + (hi - lo) // 2`
+
+### Why `mid = right // 2` is silently wrong
+
+```python
+mid = right // 2          # WRONG — ignores left entirely
+mid = (left + right) // 2 # CORRECT — mid tracks the shrinking interval
+```
+
+When `left` has advanced (e.g. `left = 6, right = 10`), `right // 2 = 5` — outside `[left, right]`. The search space shrinks but `mid` doesn't follow it. Binary search quietly searches the wrong region.
+
+> `mid` must always be a function of **both** boundaries.
+
+---
+
+## Loop Condition Semantics
+
+The condition you choose commits you to a contract. Mixing them is the most common source of off-by-one bugs.
+
+| Condition | Meaning | Use for |
+|---|---|---|
+| `while lo <= hi` | "check every candidate including `lo == hi`" | Exact target search |
+| `while lo < hi` | "stop with 1 candidate remaining — handle it after" | Lower/upper bound search |
+
+### The `lo == hi` state is not a termination shortcut — it's a valid candidate
+
+```python
+# With lo <= hi: the lo == hi case is handled inside the loop — safe
+# With lo < hi:  the loop exits with lo == hi still unchecked — you MUST verify after
+result = lo if nums[lo] == target else -1
+```
+
+### The dangerous mix (root cause of most binary search bugs)
+
+```
+✗ while lo < hi   ← boundary-style termination
+    ... exact search logic ...   ← never post-checks lo == hi
+```
+
+This skips valid answers at edge positions — especially:
+- single-element arrays `[5]`
+- two-element arrays `[1, 3]`
+- target at the last position
+
+---
+
+## Debugging Checklist
+
+When a binary search is wrong, check in order:
+
+1. **Mid validity** — is `mid ∈ [lo, hi]` every iteration? (`(lo + hi) // 2`, not `hi // 2`)
+2. **Progress guarantee** — does every branch move `lo` or `hi`? No branch can leave both unchanged.
+3. **Coverage** — with your loop condition, are all candidates evaluated before exit?
+4. **Final state** — if `lo < hi` loop, is `nums[lo]` checked after the loop?
+
+### Quickest diagnostic
+
+```python
+while ...:
+    print(lo, mid, hi)   # must change every iteration — if stuck, infinite loop
+```
+
+Simulate the two smallest cases by hand: `[x]` and `[x, y]`. These expose termination bugs faster than any large array.
 
 ---
 
@@ -106,3 +166,15 @@ Binary search on answer: when do you set `hi = mid` vs `lo = mid + 1`?
 ?
 - `feasible(mid)` is True → answer could be `mid` or smaller → `hi = mid`
 - `feasible(mid)` is False → mid is too small → `lo = mid + 1`
+
+Why is `mid = right // 2` wrong?::It ignores `left`. When `left` has advanced (e.g. `left=6, right=10`), `right // 2 = 5` — outside the search space. `mid` must depend on **both** boundaries: `(left + right) // 2`.
+
+`while lo <= hi` vs `while lo < hi` — what contract does each make?::`lo <= hi` checks every candidate including the `lo == hi` case inside the loop. `lo < hi` exits with one unchecked candidate — you must verify `nums[lo]` after the loop.
+
+What bugs does mixing `while lo < hi` with exact search logic cause?::Skips the final candidate when `lo == hi`. Fails on single-element arrays, two-element arrays, and targets at the last position.
+
+Binary search debugging: what's the first thing to print?::`print(lo, mid, hi)` each iteration. If any iteration shows no change — infinite loop. If `mid` ever falls outside `[lo, hi]` — wrong mid formula.
+
+What are the two smallest cases to always simulate by hand for binary search?::`[x]` (single element) and `[x, y]` (two elements). These expose termination and off-by-one bugs faster than any large input.
+
+`lo == hi` state in binary search — valid candidate or safe to ignore?::Valid candidate. With `lo <= hi`, it's handled inside the loop. With `lo < hi`, the loop exits before checking it — you must check `nums[lo]` explicitly after.
