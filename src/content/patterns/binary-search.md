@@ -11,6 +11,17 @@
 
 ---
 
+## Pattern Selection
+
+| Pattern | Condition | Use when | Post-loop check? |
+|---|---|---|---|
+| Exact search | `while lo <= hi` | Finding a specific target value | No — all candidates checked inside loop |
+| Boundary search | `while lo < hi` | Lower/upper bound, binary search on answer space | Yes — `lo == hi` is one unchecked candidate |
+
+> Default to `lo <= hi` unless the problem explicitly needs a boundary or answer-space search.
+
+---
+
 ## Template
 
 ### Standard (find exact target)

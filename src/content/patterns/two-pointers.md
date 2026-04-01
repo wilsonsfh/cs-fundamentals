@@ -113,6 +113,6 @@ How do you skip duplicates in two pointers?
 After recording a result, advance pointer while `arr[i] == arr[i-1]` (same level).
 
 Same-direction two pointers: what does `slow` track?::The write position — next index for a valid element.
-<!--SR:!2026-03-08,1,230-->
+<!--SR:!2026-04-02,1,210-->
 
 Container With Most Water: why always move the shorter side?::Moving the taller side can only decrease or maintain width without increasing height — no gain possible.
