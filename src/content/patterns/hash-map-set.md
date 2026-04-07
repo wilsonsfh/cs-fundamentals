@@ -150,7 +150,7 @@ d[key].add(val)     # auto-creates set() if key is new
 - Using one flat set for all categories — loses which category a value belongs to; use `defaultdict(set)` with a key per category
 - Forgetting that `defaultdict` creates a key on read — `key in d` won't trigger creation, but `d[key]` will
 - `sorted(word)` returns a **list**, not a string — lists are unhashable, can't be dict keys; use `tuple(sorted(word))` or `"".join(sorted(word))`
-- `lst = lst.sort()` → `lst` becomes `None` — `.sort()` returns `None`, not the sorted list; see [[../libraries/python/sorted]]
+- `lst = lst.sort()` → `lst` becomes `None` — `.sort()` returns `None`, not the sorted list; see [[sorted]]
 
 ---
 
