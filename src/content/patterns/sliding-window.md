@@ -251,6 +251,7 @@ def maxProfit(prices):
 | Best Time to Buy and Sell Stock | Easy | running min + max profit | [LC 121](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/) |
 | Longest Subarray with At Most K Zeros | Medium | shrink when zeros > k | — |
 | Find All Anagrams in a String | Medium | fixed window + char frequency match | [LC 438](https://leetcode.com/problems/find-all-anagrams-in-a-string/) |
+| Sliding Window Maximum | Hard | monotonic deque — discard useless candidates proactively | [LC 239](https://leetcode.com/problems/sliding-window-maximum/) |
 
 ---
 
@@ -285,6 +286,20 @@ LC 567: fixed window — `if` or `while` for shrinking?::`if` — fixed window c
 LC 567: why must you `del` zero-count keys from the window dict?::`{'a':1,'b':0} != {'a':1}` — zero-value key is still a key. `dict ==` sees them as different → comparison fails silently.
 
 LC 567: which string counts upfront and why?::`s1` — static, never changes. `s2` window counts update incrementally (add incoming, subtract outgoing). Counting `s2` upfront gives global not window frequencies.
+
+### LC 239 — Sliding Window Maximum
+
+LC 239: what is the problem reframed?::Maintain the maximum of a moving window in O(1) per step as it slides, rather than recomputing from scratch each time.
+
+LC 239: what makes an element useless and why can it be discarded?::A larger element arrives to its right. It is smaller (worse) and will exit the window sooner (older). It can never become the maximum.
+
+LC 239: why is a deque needed instead of a stack?::Two types of removal are needed: from the front (element left the window by position) and from the back (element made useless by a larger incoming value). A stack only allows one-end removal.
+
+LC 239: what does the deque store and in what order?::Indices, in non-increasing order of their values. Front = index of the current window maximum.
+
+LC 239: when do you remove from the front vs the back?::Front: when `window[0] < leftmost` — element is no longer in the window. Back: when `nums[window[-1]] < nums[i]` — smaller element made useless by the incoming larger one.
+
+LC 239: what is the connection to Largest Rectangle in Histogram?::Both use a monotonic structure to discard irrelevant elements early. Histogram (increasing stack) pops when a smaller element finalises a computation. Sliding Window Maximum (decreasing deque) pops when a larger element eliminates useless candidates.
 
 ### LC 76 — Minimum Window Substring
 
