@@ -168,6 +168,16 @@ d[key].add(val)     # auto-creates set() if key is new
 
 ## Problem Flashcards
 
+### Codility Pairs — First/Last Digits
+
+Why precompute first digits in a separate pass for Codility Pairs?::O(1) lookup on the second pass. Without it, for each number you'd scan all n numbers to count matches → O(n²).
+
+Codility Pairs: after counting first digits, why subtract 1 when first == last?::If first digit equals last digit, the number would match itself. Subtract 1 to exclude the self-pairing case.
+
+Codility Pairs: why use a fixed array `[0] * 10` instead of `defaultdict(int)`?::Only 10 possible digits (0–9); fixed array is O(1) space, fast indexing, no hashing overhead.
+
+---
+
 ### LC 49 — Group Anagrams
 
 Why does sorting each word produce a canonical anagram key?::Anagrams contain the same characters — sorting them always produces the same sequence. `"eat"`, `"tea"`, `"ate"` all sort to `"aet"`.
